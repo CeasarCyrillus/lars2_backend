@@ -1,0 +1,30 @@
+{
+  "name": "lars2_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/app.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.1",
+    "@types/node": "^20.9.2",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/jwt-simple": "^0.5.36",
+    "cors": "^2.8.5",
+    "express": "4",
+    "jwt-simple": "^0.5.6",
+    "nodemo": "^1.0.0",
+    "nodemon": "^3.0.2",
+    "socket.io": "^4.7.2",
+    "socketio-jwt": "^4.6.2"
+  }
+}
