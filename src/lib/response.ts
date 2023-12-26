@@ -7,18 +7,17 @@ export type Response<T> = {
   message?: T
 }
 
-type MessageType = "user" | "connection" | "authentication" | "reports"
+export type MessageType = "user" | "connection" | "reports" | "login" | "validateAuthentication"
 export const withSuccess = (socket: Socket) => <T>(messageType: MessageType, message?: T) => {
   const response: Response<T> = message !== undefined ?
     {status: Success, message} :
     {status: Success}
-  console.log("CC: with success:", messageType, message)
   socket.emit(messageType, response)
 }
 
-export const withFailure = (socket: Socket) => <T>(messageType: MessageType, message: T) => {
-  const response: Response<T> = message !== undefined ?
-    {status: Failure, message} :
+export const withFailure = (socket: Socket) => <T>(messageType: MessageType, error?: T) => {
+  const response: Response<T> = error !== undefined ?
+    {status: Failure, message: error} :
     {status: Failure}
   socket.emit(messageType, response)
 }

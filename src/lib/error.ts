@@ -1,3 +1,3 @@
-export const authenticationError = {error: "authenticationError"}
-export const unknownError = {error: "unknownError"}
-export const incorrectLoginDetails = {error: "incorrectLoginDetails"}
+export const authenticationError = {message: "authenticationError"}
+export const unknownError = {message: "unknownError"}
+export const incorrectLoginDetails = {message: "incorrectLoginDetails"}
