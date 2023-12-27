@@ -1,12 +1,14 @@
 import {Socket} from "socket.io";
 import {decode} from "jwt-simple";
 import {authenticationError} from "../../lib/error";
-import {MessageType, withFailure, withSuccess} from "../../lib/response";
-import {AuthHeader} from "../../sharedTypes/AuthHeader";
-import {User} from "../../Data/repositoryImplementation/UserRepository";
+import {withError, withSuccess} from "../../lib/response";
+import {Authentication} from "../../sharedTypes/dto/Authentication";
+import {User} from "../../sharedTypes/dto/User";
+import {EventName} from "../../sharedTypes/socket/Socket";
+
 export const jwtSecretKey = "secret-key";
 
-export const getAuthorizedUser = (authHeader: AuthHeader) => {
+export const getAuthorizedUser = (authHeader: Authentication) => {
   try {
     return decode(authHeader.token, jwtSecretKey, false)
   } catch (e) {
@@ -14,7 +16,7 @@ export const getAuthorizedUser = (authHeader: AuthHeader) => {
   }
 }
 
-export const isAuthorized = (authHeader:AuthHeader) => {
+export const isAuthorized = (authHeader:Authentication) => {
   try {
     decode(authHeader.token, jwtSecretKey, false)
     return true
@@ -23,8 +25,8 @@ export const isAuthorized = (authHeader:AuthHeader) => {
   }
 }
 
-export const withAuthorization = (socket: Socket) => <T>(messageType: MessageType, getResponse: (user: User) => T | Promise<T>) => {
-  const failure = withFailure(socket)
+export const withAuthorization = (socket: Socket) => <T>(messageType: EventName, getResponse: (user: User) => T | Promise<T>) => {
+  const failure = withError(socket)
   const success = withSuccess(socket)
   socket.on(messageType, async () => {
     const user = getAuthorizedUser(socket.data.auth)

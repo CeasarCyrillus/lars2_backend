@@ -2,9 +2,8 @@ import {Association} from "./domain/association/association";
 import {Team} from "./domain/team/team";
 import {Report} from "./domain/report/report";
 import {ReportDTO} from "./domain/report/reportDTO";
-import {User} from "./Data/repositoryImplementation/UserRepository";
 
-export const user: User = {
+export const user: any = {
   id: 0,
   name: "Ceasar Cyrillus",
   email: "email@hotmail.com"
