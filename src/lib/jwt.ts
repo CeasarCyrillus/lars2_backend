@@ -1,10 +1,10 @@
 import {Socket} from "socket.io";
 import {decode} from "jwt-simple";
-import {authenticationError} from "../../lib/error";
-import {withError, withSuccess} from "../../lib/response";
-import {Authentication} from "../../sharedTypes/dto/Authentication";
-import {User} from "../../sharedTypes/dto/User";
-import {EventName} from "../../sharedTypes/socket/Socket";
+import {authenticationError} from "./error";
+import {withError, withSuccess} from "./response";
+import {Authentication} from "../sharedTypes/dto/Authentication";
+import {User} from "../sharedTypes/dto/User";
+import {EventName} from "../sharedTypes/socket/Socket";
 
 export const jwtSecretKey = "secret-key";
 

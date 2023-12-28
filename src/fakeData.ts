@@ -1,7 +1,5 @@
-import {Association} from "./domain/association/association";
-import {Team} from "./domain/team/team";
-import {Report} from "./domain/report/report";
-import {ReportDTO} from "./domain/report/reportDTO";
+import {Team} from "./sharedTypes/dto/Team";
+import {Report} from "./sharedTypes/dto/Report";
 
 export const user: any = {
   id: 0,
@@ -12,28 +10,19 @@ export const user: any = {
 export const team: Team = {
   id: 0,
   association: 0,
-  contacts: [0],
+  contacts: [],
+  mainContact: {
+    email: "email@email.com",
+    name: "Henrik Tylenius",
+    phone: "+93-12991291"
+  },
   name: "Leksands IF",
   reports: [],
-  specialAssociation: undefined
+  specialAssociation: undefined,
+  created: new Date()
 }
 
-export const association: Association = {
-  id: 0,
-  name: "Footballl association",
-  teams: [0]
-}
-
-export const report: Report = {
-  id: 0,
-  created: new Date(),
-  period: new Date("01-2019"),
-  reporter: 0,
-  revisions: 0,
-  team: 0
-}
-
-export const fakeReportDto1: ReportDTO = {
+export const fakeReportDto1: Report = {
   created: new Date(),
   period: new Date("2023-08"),
   reporter: {email: "henkan@email.com", name: "Henrik Jurelius", phone: "01992-1292992"},
@@ -42,7 +31,7 @@ export const fakeReportDto1: ReportDTO = {
   teamName: "Team IF Fotboll",
 }
 
-export const fakeReportDto2: ReportDTO = {
+export const fakeReportDto2: Report = {
   created: new Date("2023-08-11"),
   period: new Date("2023-08"),
   reporter: {email: "ceasar@email.com", name: "Ceasar Cyrillus", phone: "073 232 46 21"},
@@ -51,7 +40,7 @@ export const fakeReportDto2: ReportDTO = {
   teamName: "Team IF Fotboll",
 }
 
-export const fakeReportDto3: ReportDTO = {
+export const fakeReportDto3: Report = {
   created: new Date("2023-08-11"),
   period: new Date("2023-08"),
   reporter: {email: "ceasar@email.com", name: "Ceasar Cyrillus", phone: "073 232 46 21"},
@@ -60,7 +49,7 @@ export const fakeReportDto3: ReportDTO = {
   teamName: "Team IF Fotboll",
 }
 
-export const fakeReportDto4: ReportDTO = {
+export const fakeReportDto4: Report = {
   created: new Date("2023-08-11"),
   period: new Date("2023-08"),
   reporter: {email: "ceasar@email.com", name: "Ceasar Cyrillus", phone: "073 232 46 21"},

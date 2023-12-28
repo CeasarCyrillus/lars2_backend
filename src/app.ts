@@ -3,15 +3,15 @@ import {createServer} from 'node:http';
 import {Server} from 'socket.io';
 import cors from "cors"
 import {encode} from "jwt-simple"
-import {isAuthorized, jwtSecretKey, withAuthorization} from "./domain/authentication/jwt";
+import {isAuthorized, jwtSecretKey, withAuthorization} from "./lib/jwt";
 import {withError, withSuccess} from "./lib/response";
-import {fakeReportDto1, fakeReportDto2, fakeReportDto3, fakeReportDto4, user} from "./fakeData";
+import {fakeReportDto1, fakeReportDto2, fakeReportDto3, fakeReportDto4, team, user} from "./fakeData";
 import {Authentication} from "./sharedTypes/dto/Authentication";
 import {
   ClientToServerEvents, EventName,
-  InterServerEvents, loginEvent, reportsEvent,
+  InterServerEvents,
   ServerToClientEvents,
-  SocketData, userEvent, validateAuthenticationEvent
+  SocketData
 } from "./sharedTypes/socket/Socket";
 import {User} from "./sharedTypes/dto/User";
 
@@ -30,6 +30,12 @@ const io = new Server<
     origin: "http://localhost:3000"
   }});
 
+const userEvent: EventName = "user"
+const validateAuthenticationEvent: EventName = "validateAuthentication"
+const reportsEvent: EventName = "reports"
+const loginEvent: EventName = "login"
+const teamsEvent: EventName = "teams"
+
 io.on("connection", (socket) => {
   console.log("CONNECTION!")
   const success = withSuccess(socket)
@@ -41,6 +47,10 @@ io.on("connection", (socket) => {
 
   authorized(reportsEvent, () => {
     return [fakeReportDto1, fakeReportDto2, fakeReportDto3, fakeReportDto4];
+  })
+
+  authorized(teamsEvent, () => {
+    return [team]
   })
 
 
