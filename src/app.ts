@@ -14,6 +14,7 @@ import {
   SocketData
 } from "./sharedTypes/socket/Socket";
 import {User} from "./sharedTypes/dto/User";
+import "reflect-metadata"
 
 const app = express();
 app.use(express.json())
