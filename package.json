@@ -4,9 +4,10 @@
    "description": "",
    "main": "index.js",
    "scripts": {
-      "start": "ts-node src/index.ts",
+      "start": "NODE_ENV=development nodemon src/app.ts",
       "build": "tsc",
-      "typeorm": "typeorm-ts-node-commonjs"
+      "typeorm": "typeorm-ts-node-commonjs",
+      "add:user": "NODE_ENV=development ts-node src/data/createUser.ts"
    },
    "keywords": [],
    "author": "",
@@ -19,8 +20,10 @@
       "typescript": "^5.2.2"
    },
    "dependencies": {
+      "@types/bcrypt": "^5.0.2",
       "@types/cors": "^2.8.17",
       "@types/jwt-simple": "^0.5.36",
+      "bcrypt": "^5.1.1",
       "cors": "^2.8.5",
       "express": "4",
       "jwt-simple": "^0.5.6",

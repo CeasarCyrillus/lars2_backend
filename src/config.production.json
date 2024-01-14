@@ -1,0 +1,12 @@
+{
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "rasaeC1598!",
+    "database": "postgres",
+    "logging": true,
+    "synchronize": true
+  },
+  "passwordSaltRounds": 10
+}

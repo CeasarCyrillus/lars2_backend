@@ -1,4 +1,10 @@
+import {UserRole} from "./UserRole";
+
 export type User = {
-  name: string,
-  email: string,
+  id: number
+  username: string
+  email: string
+  name: string
+  phone: string
+  role: UserRole
 }

@@ -1,13 +1,16 @@
 import {Socket} from "socket.io";
-import {Response} from "../sharedTypes/socket/Response";
 import {EventName} from "../sharedTypes/socket/Socket";
+import {ErrorResponse, SuccessResponse} from "../sharedTypes/socket/response/Response";
+import {AllErrors} from "../sharedTypes/error/AllErrors";
 
 export const withSuccess = (socket: Socket) => <T>(eventName: EventName, payload: T) => {
-  const response: Response<T> = {type: "success", payload}
+  const response: SuccessResponse<T> = {type: "success", payload}
+  console.log(`[${eventName}] success response`, payload)
   socket.emit(eventName, response)
 }
 
-export const withError = (socket: Socket) => <T>(eventName: EventName, payload: T) => {
-  const response: Response<T> = {type: "success", payload}
+export const withError = (socket: Socket) => (eventName: EventName, payload: AllErrors) => {
+  const response: ErrorResponse<AllErrors> = {type: "error", payload}
+  console.error(`[${eventName}] error response`, payload)
   socket.emit(eventName, response)
 }

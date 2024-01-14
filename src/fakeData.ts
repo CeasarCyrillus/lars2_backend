@@ -1,11 +1,16 @@
 import {Team} from "./sharedTypes/dto/Team";
 import {Report} from "./sharedTypes/dto/Report";
+import {User} from "./sharedTypes/dto/User";
 
-export const user: any = {
+export const user: User = {
+  email: "",
   id: 0,
-  name: "Ceasar Cyrillus",
-  email: "email@hotmail.com"
+  name: "name",
+  phone: "phone",
+  username: "ceasar",
+  role: "admin"
 }
+
 
 export const team: Team = {
   id: 0,

@@ -2,15 +2,21 @@ import {LoginDetails} from "../dto/LoginDetails";
 import {User} from "../dto/User";
 import {Authentication} from "../dto/Authentication";
 import {Report} from "../dto/Report";
-import {Response} from "./Response";
+import {SuccessResponse} from "./response/Response";
 import {Team} from "../dto/Team";
+import {UserResponse} from "./response/UserResponse";
+import {ValidateAuthenticationResponse} from "./response/ValidateAuthenticationResponse";
+import {ReportsResponse} from "./response/ReportsResponse";
+import {LoginResponse} from "./response/LoginResponse";
+import {TeamsResponse} from "./response/TeamsResponse";
 
 export type ServerToClientEvents = {
-  user: (user: Response<User>) => void
-  validateAuthentication: (isValid: Response<boolean>) => void
-  reports: (reports: Response<Report[]>) => void
-  login: (authentication: Response<Authentication>) => void
-  teams: (teams: Response<Team[]>) => void
+  user: (user: UserResponse) => void
+  validateAuthentication: (isValid: ValidateAuthenticationResponse) => void
+  reports: (reports: ReportsResponse) => void
+  login: (authentication: LoginResponse) => void
+  teams: (teams: TeamsResponse) => void,
+  connect: () => void
 }
 
 export type ClientToServerEvents = {
@@ -27,4 +33,4 @@ export interface SocketData {
   auth: Authentication
 }
 
-export type EventName = keyof ServerToClientEvents
+export type EventName = keyof ServerToClientEvents | "connect" | "connect_error"
