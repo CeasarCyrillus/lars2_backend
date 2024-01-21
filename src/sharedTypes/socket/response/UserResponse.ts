@@ -1,5 +1,5 @@
 import {ErrorResponse, SuccessResponse} from "./Response";
-import {User} from "../../dto/User";
+import {AdminDTO} from "../../dto/AdminDTO";
 import {UserError} from "../../error/UserError";
 
-export type UserResponse = SuccessResponse<User> | ErrorResponse<UserError>
+export type UserResponse = SuccessResponse<AdminDTO> | ErrorResponse<UserError>

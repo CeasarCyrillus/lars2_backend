@@ -1,5 +1,5 @@
 import {ErrorResponse, SuccessResponse} from "./Response";
-import {Team} from "../../dto/Team";
+import {TeamDTO} from "../../dto/TeamDTO";
 import {TeamsError} from "../../error/TeamsError";
 
-export type TeamsResponse = SuccessResponse<Team[]> | ErrorResponse<TeamsError>
+export type TeamsResponse = SuccessResponse<TeamDTO[]> | ErrorResponse<TeamsError>

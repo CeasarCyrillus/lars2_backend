@@ -1,7 +1,9 @@
-import {UserEntity} from "./entity/UserEntity";
+import {ReporterEntity} from "../entity/ReporterEntity";
 
-import {generateHash} from "../lib/password";
-import {AppDataSource} from "./data-source";
+import {generateHash} from "../../lib/password";
+import {AppDataSource} from "../data-source";
+import {AdminEntity} from "../entity/AdminEntity";
+import {adminRepository} from "../entity/repository";
 
 const getNamedArg = (argName: string): string =>{
   const arg = process.argv
@@ -11,8 +13,8 @@ const getNamedArg = (argName: string): string =>{
     throw new Error(`Arg not found '${argName}'`)
   }
   return arg.split("=")[1]
-
 }
+
 const username = getNamedArg("username")
 const email = getNamedArg("email")
 const name = getNamedArg("name")
@@ -21,16 +23,14 @@ const password = getNamedArg("password")
 
 
 AppDataSource.initialize().then(async () => {
-  const repository = AppDataSource.getRepository(UserEntity)
-  const user = new UserEntity()
+  const user = new AdminEntity()
   user.username = username
   user.email = email
   user.name = name
   user.phone = phone
   user.passwordHash = generateHash(password)
-  user.role = "admin"
 
-  await repository.save(user)
+  await adminRepository.save(user)
   console.log("User created!")
   console.log(JSON.stringify(user, null, 4))
   process.exit()

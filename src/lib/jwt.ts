@@ -3,10 +3,10 @@ import {decode} from "jwt-simple";
 import {withError, withSuccess} from "./response";
 import {Authentication} from "../sharedTypes/dto/Authentication";
 import {EventName} from "../sharedTypes/socket/Socket";
-import {User} from "../sharedTypes/dto/User";
+import {AdminDTO} from "../sharedTypes/dto/AdminDTO";
 
 export const jwtSecretKey = "secret-key";
-export type JwtPayload = User
+export type JwtPayload = AdminDTO
 
 export const getAuthorizedUser = (authHeader: Authentication) => {
   try {
@@ -25,13 +25,16 @@ export const isAuthorized = (authHeader:Authentication) => {
   }
 }
 
-export const withAuthorization = (socket: Socket) => <T>(messageType: EventName, getResponse: (user: JwtPayload) => T | Promise<T>) => {
+export const withAuthorization = (socket: Socket) => <T, Request>(
+  messageType: EventName,
+  getResponse: (request:{user: JwtPayload, request: Request}) => T | Promise<T>
+) => {
   const failure = withError(socket)
   const success = withSuccess(socket)
-  socket.on(messageType, async () => {
+  socket.on(messageType, async (request: Request) => {
     const user = getAuthorizedUser(socket.data.auth)
     if(user) {
-      const response = await getResponse(user)
+      const response = await getResponse({user, request})
       success(messageType, response)
     } else {
       failure(messageType, "authenticationError")

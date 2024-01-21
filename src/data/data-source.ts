@@ -1,13 +1,19 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
-import { UserEntity } from "./entity/UserEntity"
 import {getConfig} from "../GetConfig";
+import {TeamEntity} from "./entity/TeamEntity";
+import {ReportEntity} from "./entity/ReportEntity";
+import {AdminEntity} from "./entity/AdminEntity";
 
 const environmentConfig = getConfig()
 export const AppDataSource = new DataSource({
         type: "postgres",
         ...environmentConfig.database,
-        entities: [UserEntity],
+        entities: [
+          TeamEntity,
+          AdminEntity,
+          ReportEntity,
+        ],
         migrations: [],
         subscribers: [],
     });

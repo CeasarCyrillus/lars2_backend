@@ -5,7 +5,6 @@ import cors from "cors"
 import {encode} from "jwt-simple"
 import {isAuthorized, JwtPayload, jwtSecretKey, withAuthorization} from "./lib/jwt";
 import {withError, withSuccess} from "./lib/response";
-import {fakeReportDto1, fakeReportDto2, fakeReportDto3, fakeReportDto4, team, user} from "./fakeData";
 import {Authentication} from "./sharedTypes/dto/Authentication";
 import {
   ClientToServerEvents, EventName,
@@ -17,7 +16,17 @@ import "reflect-metadata"
 import {AppDataSource} from "./data/data-source";
 import {verifyPassword} from "./lib/password";
 import {getConfig} from "./GetConfig";
-import {userRepository} from "./data/repository/userRepository";
+import {adminRepository, reportRepository, teamRepository} from "./data/entity/repository";
+import {createMap} from "@automapper/core";
+import {mapper} from "./sharedTypes/dto/mapper";
+import {AdminEntity} from "./data/entity/AdminEntity";
+import {AdminDTO} from "./sharedTypes/dto/AdminDTO";
+import {AutoMap} from "@automapper/classes";
+import {Column, Entity} from "typeorm";
+import {ReportEntity} from "./data/entity/ReportEntity";
+import {mapReport, ReportDTO} from "./sharedTypes/dto/ReportDTO";
+import {TeamEntity} from "./data/entity/TeamEntity";
+import {mapTeam, TeamDTO} from "./sharedTypes/dto/TeamDTO";
 
 const app = express();
 app.use(express.json())
@@ -40,20 +49,54 @@ const reportsEvent: EventName = "reports"
 const loginEvent: EventName = "login"
 const teamsEvent: EventName = "teams"
 
+
+createMap(mapper, AdminEntity, AdminDTO)
+createMap(mapper, TeamEntity, TeamDTO)
+createMap(mapper, ReportEntity, ReportDTO)
+
+
 io.on("connection", (socket) => {
+  console.log("CC: connection!")
   const success = withSuccess(socket)
   const failure = withError(socket)
   const authorized = withAuthorization(socket)
-  authorized(userEvent, (user) => user)
 
-  authorized(reportsEvent, () => {
-    return [fakeReportDto1, fakeReportDto2, fakeReportDto3, fakeReportDto4];
+  authorized(userEvent, ({user}) => user)
+
+  authorized(reportsEvent, async () => {
+    const reports = await reportRepository.find({relations: {team: true}})
+
+    return reports.map(mapReport);
   })
 
-  authorized(teamsEvent, () => {
-    return [team]
+  authorized(teamsEvent, async () => {
+    const teams = await teamRepository.find({})
+    return teams.map(mapTeam)
   })
 
+  socket.on(loginEvent, async (loginDetails) => {
+    const user = await adminRepository.findOne({
+      where: [
+        {username: loginDetails.username},
+        {email: loginDetails.username}
+      ]
+    })
+
+    if(!user) {
+      failure(loginEvent, "incorrectUsername")
+      return
+    }
+
+    if(!verifyPassword(loginDetails.password, user.passwordHash)){
+      failure(loginEvent, "incorrectPassword")
+      return
+    }
+
+    const token = encode(user, jwtSecretKey)
+    const authHeader: Authentication = {token}
+    socket.data.auth = authHeader
+    success(loginEvent, authHeader)
+  })
 
   socket.on(validateAuthenticationEvent, (authHeader: Authentication) => {
     const authorized = isAuthorized(authHeader);
@@ -61,34 +104,6 @@ io.on("connection", (socket) => {
       socket.data.auth = authHeader
     }
     success(validateAuthenticationEvent, authorized)
-  })
-
-  socket.on(loginEvent, async (loginDetails) => {
-    const user = await userRepository.findOne({
-      where: [
-        {username: loginDetails.username},
-        {email: loginDetails.username}
-      ]
-    })
-    if(!user) {
-      failure(loginEvent, "incorrectUsername")
-      return
-    }
-
-    if(!verifyPassword(loginDetails.password, user.passwordHash)){
-      console.log("wrong password")
-      failure(loginEvent, "incorrectPassword")
-      return
-    }
-
-    const payload: JwtPayload = {
-      email: user.email, id: user.id, phone: user.phone, username: user.username, name: user.name, role: user.role
-    }
-
-    const token = encode(payload, jwtSecretKey)
-    const authHeader: Authentication = {token}
-    socket.data.auth = authHeader
-    success(loginEvent, authHeader)
   })
 })
 

@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+"@automapper/classes@^8.7.7":
+  version "8.7.7"
+  resolved "https://registry.yarnpkg.com/@automapper/classes/-/classes-8.7.7.tgz#2194ba66d4e7689bec23289b56efc5eb69358c9d"
+  integrity sha512-FSbvt6QE8XnhKKQZA3kpKLuLrr9x1iW+lNYTrawVLjxQ05zsCGccLxe7moMNrg1wFAVAouQKupFgCGQ7XRjmJw==
+
+"@automapper/core@^8.7.7":
+  version "8.7.7"
+  resolved "https://registry.yarnpkg.com/@automapper/core/-/core-8.7.7.tgz#b48dd0260d188e6036fafd7ac03727d9295175ab"
+  integrity sha512-YfpDJ/xqwUuC0S+BLNk81ZJfeL7CmjirUX/Gk9eQyx146DKvneBZgeZ9v5rDB51Ti14jTxVHis+5JuT7W/q0TA==
+
 "@babel/runtime@^7.21.0":
   version "7.23.6"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.23.6.tgz"
@@ -15,6 +25,11 @@
   integrity sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
+
+"@faker-js/faker@^8.3.1":
+  version "8.3.1"
+  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-8.3.1.tgz#7753df0cb88d7649becf984a96dd1bd0a26f43e3"
+  integrity sha512-FdgpFxY6V6rLZE9mmIBb9hM0xpfvQOSNOLnzolzKwsE1DH+gC7lEKV1p1IbR0lAYyvYd5a4u3qWJzowUkw1bIw==
 
 "@jridgewell/resolve-uri@^3.0.3":
   version "3.1.1"
@@ -1295,6 +1310,11 @@ reflect-metadata@^0.1.13:
   version "0.1.14"
   resolved "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.1.14.tgz"
   integrity sha512-ZhYeb6nRaXCfhnndflDK8qI6ZQ/YcWZCISRAWICW9XYqMUwjZM9Z0DveWX/ABN01oxSHwVxKQmxeYZSsm0jh5A==
+
+reflect-metadata@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.2.1.tgz#8d5513c0f5ef2b4b9c3865287f3c0940c1f67f74"
+  integrity sha512-i5lLI6iw9AU3Uu4szRNPPEkomnkjRTaVt9hy/bn5g/oSzekBSMeLZblcjP74AW0vBabqERLLIrz+gR8QYR54Tw==
 
 regenerator-runtime@^0.14.0:
   version "0.14.1"

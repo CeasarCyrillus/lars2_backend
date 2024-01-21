@@ -1,5 +1,5 @@
 import {ErrorResponse, SuccessResponse} from "./Response";
 import {ReportsError} from "../../error/ReportsError";
-import {Report} from "../../dto/Report";
+import {ReportDTO} from "../../dto/ReportDTO";
 
-export type ReportsResponse = SuccessResponse<Report[]> | ErrorResponse<ReportsError>
+export type ReportsResponse = SuccessResponse<ReportDTO[]> | ErrorResponse<ReportsError>

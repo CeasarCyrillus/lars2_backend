@@ -5,7 +5,7 @@ import {AllErrors} from "../sharedTypes/error/AllErrors";
 
 export const withSuccess = (socket: Socket) => <T>(eventName: EventName, payload: T) => {
   const response: SuccessResponse<T> = {type: "success", payload}
-  console.log(`[${eventName}] success response`, payload)
+  console.log(`[${eventName}] success response`)
   socket.emit(eventName, response)
 }
 
