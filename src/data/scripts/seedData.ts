@@ -44,7 +44,7 @@ const generateAdmin = () => {
 
 const generateReporter = () => {
   const reporter = new AdminEntity()
-  reporter.passwordHash = generateHash("pwd")
+  reporter.passwordHash = "pwd"
   const firstName = faker.person.firstName()
   const lastName = faker.person.lastName()
   reporter.name = `${firstName} ${lastName}`
@@ -61,7 +61,7 @@ const generateTeams = (amount: number) => range(amount).map((i) => {
   console.log(`    generating team ${i+1}/${amount}`)
   const team = generateTeam()
   team.reporters = generateReporters(faker.number.int({min:1, max:2}))
-  team.reports = generateReports(faker.number.int({min:100, max:100}))
+  team.reports = generateReports(12 * 5)
   return team
 })
 
@@ -76,12 +76,14 @@ AppDataSource.initialize().then(async () => {
   await clearDb()
   console.log("2. done")
   console.log("3. generating data")
-  const teams = generateTeams(5)
+  const teams = generateTeams(500)
   const admin = generateAdmin()
   console.log("4. done")
   console.log("5. saving data")
   await adminRepository.save(admin)
-  await teamRepository.save(teams)
+  const saved = teams.map((team) => teamRepository.save(team))
+  await Promise.all(saved)
+  //await teamRepository.save(teams)
   console.log("6. done")
 
   process.exit()

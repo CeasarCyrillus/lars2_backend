@@ -21,12 +21,12 @@ import {createMap} from "@automapper/core";
 import {mapper} from "./sharedTypes/dto/mapper";
 import {AdminEntity} from "./data/entity/AdminEntity";
 import {AdminDTO} from "./sharedTypes/dto/AdminDTO";
-import {AutoMap} from "@automapper/classes";
-import {Column, Entity} from "typeorm";
 import {ReportEntity} from "./data/entity/ReportEntity";
 import {mapReport, ReportDTO} from "./sharedTypes/dto/ReportDTO";
 import {TeamEntity} from "./data/entity/TeamEntity";
 import {mapTeam, TeamDTO} from "./sharedTypes/dto/TeamDTO";
+import {ReportsRequest} from "./sharedTypes/socket/request/ReportsRequest";
+import {QueryRequest} from "./sharedTypes/socket/request/QueryRequest";
 
 const app = express();
 app.use(express.json())
@@ -63,10 +63,12 @@ io.on("connection", (socket) => {
 
   authorized(userEvent, ({user}) => user)
 
-  authorized(reportsEvent, async () => {
-    const reports = await reportRepository.find({relations: {team: true}})
-
-    return reports.map(mapReport);
+  authorized<QueryRequest<ReportDTO>>(reportsEvent, async ({request}) => {
+    const queryResponse = await reportRepository.filter(request.payload)
+    return {
+      count: queryResponse.count,
+      data: queryResponse.data.map(mapReport)
+    }
   })
 
   authorized(teamsEvent, async () => {
@@ -74,7 +76,8 @@ io.on("connection", (socket) => {
     return teams.map(mapTeam)
   })
 
-  socket.on(loginEvent, async (loginDetails) => {
+  socket.on(loginEvent, async (request) => {
+    const {payload: loginDetails} = request
     const user = await adminRepository.findOne({
       where: [
         {username: loginDetails.username},
@@ -83,27 +86,28 @@ io.on("connection", (socket) => {
     })
 
     if(!user) {
-      failure(loginEvent, "incorrectUsername")
+      failure(loginEvent, "incorrectUsername", request.trace)
       return
     }
 
     if(!verifyPassword(loginDetails.password, user.passwordHash)){
-      failure(loginEvent, "incorrectPassword")
+      failure(loginEvent, "incorrectPassword", request.trace)
       return
     }
 
     const token = encode(user, jwtSecretKey)
     const authHeader: Authentication = {token}
     socket.data.auth = authHeader
-    success(loginEvent, authHeader)
+    success(loginEvent, authHeader, request.trace)
   })
 
-  socket.on(validateAuthenticationEvent, (authHeader: Authentication) => {
+  socket.on(validateAuthenticationEvent, (request) => {
+    const {payload: authHeader} = request
     const authorized = isAuthorized(authHeader);
     if(authorized) {
       socket.data.auth = authHeader
     }
-    success(validateAuthenticationEvent, authorized)
+    success(validateAuthenticationEvent, authorized, request.trace)
   })
 })
 

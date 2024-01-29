@@ -1,5 +1,3 @@
-import {ReporterEntity} from "../entity/ReporterEntity";
-
 import {generateHash} from "../../lib/password";
 import {AppDataSource} from "../data-source";
 import {AdminEntity} from "../entity/AdminEntity";

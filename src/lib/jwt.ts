@@ -4,6 +4,7 @@ import {withError, withSuccess} from "./response";
 import {Authentication} from "../sharedTypes/dto/Authentication";
 import {EventName} from "../sharedTypes/socket/Socket";
 import {AdminDTO} from "../sharedTypes/dto/AdminDTO";
+import {BaseRequest} from "../sharedTypes/socket/request/Request";
 
 export const jwtSecretKey = "secret-key";
 export type JwtPayload = AdminDTO
@@ -25,19 +26,20 @@ export const isAuthorized = (authHeader:Authentication) => {
   }
 }
 
-export const withAuthorization = (socket: Socket) => <T, Request>(
+
+export const withAuthorization = (socket: Socket) => <T>(
   messageType: EventName,
-  getResponse: (request:{user: JwtPayload, request: Request}) => T | Promise<T>
+  getResponse: (request:{user: JwtPayload, request: BaseRequest<T>}) => any | Promise<any>
 ) => {
   const failure = withError(socket)
   const success = withSuccess(socket)
-  socket.on(messageType, async (request: Request) => {
+  socket.on(messageType, async (request: BaseRequest<T>) => {
     const user = getAuthorizedUser(socket.data.auth)
     if(user) {
       const response = await getResponse({user, request})
-      success(messageType, response)
+      success(messageType, response, request.trace)
     } else {
-      failure(messageType, "authenticationError")
+      failure(messageType, "authenticationError", request.trace)
     }
   })
 }

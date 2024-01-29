@@ -1,10 +1,12 @@
-import {LoginDetails} from "../dto/LoginDetails";
 import {Authentication} from "../dto/Authentication";
 import {UserResponse} from "./response/UserResponse";
 import {ValidateAuthenticationResponse} from "./response/ValidateAuthenticationResponse";
 import {ReportsResponse} from "./response/ReportsResponse";
 import {LoginResponse} from "./response/LoginResponse";
 import {TeamsResponse} from "./response/TeamsResponse";
+import {ReportsRequest} from "./request/ReportsRequest";
+import {ValidateAuthenticationRequest} from "./request/ValidateAuthenticationRequest";
+import {LoginRequest} from "./request/LoginRequest";
 
 export type ServerToClientEvents = {
   user: (user: UserResponse) => void
@@ -17,9 +19,9 @@ export type ServerToClientEvents = {
 
 export type ClientToServerEvents = {
   user: () => void
-  validateAuthentication: (authentication: Authentication) => void
-  reports: () => void
-  login: (loginDetails: LoginDetails) => void
+  validateAuthentication: (request: ValidateAuthenticationRequest) => void
+  reports: (request: ReportsRequest) => void
+  login: (request: LoginRequest) => void
   teams: () => void
 }
 
