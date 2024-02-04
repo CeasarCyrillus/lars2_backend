@@ -6,8 +6,11 @@ import {generateHash} from "../../lib/password";
 import {adminRepository, reportRepository, teamRepository} from "../entity/repository";
 import {ReportStatus} from "../../sharedTypes/dto/ReportStatus";
 import {AdminEntity} from "../entity/AdminEntity";
+import moment from "moment";
 
 faker.seed(1118112)
+const today = new Date("2024-03")
+const yearsAgo = new Date("2015-01")
 
 const range = (amount: number) => [...new Array(amount)].map((_, index) => index)
 const generateTeam = () => {
@@ -20,10 +23,8 @@ const generateReport = () => {
   const report = new ReportEntity()
   const statuses: ReportStatus[] = ["not-started", "past-deadline", "approved", "in-progress"]
   report.status = faker.helpers.arrayElement(statuses)
-  report.report_date = faker.date.anytime({refDate: new Date()})
-  const period = faker.date.anytime({refDate: new Date()})
-
-  report.period = new Date(period.getFullYear(), period.getMonth())
+  report.report_date = moment(faker.date.between({from: yearsAgo, to: today})).format("YYYY-MM")
+  report.period = moment(faker.date.between({from: yearsAgo, to: today})).format("YYYY-MM")
   report.revision = faker.number.int({min: 0, max:4})
   report.reporter = generateReporter()
   return report
@@ -61,7 +62,7 @@ const generateTeams = (amount: number) => range(amount).map((i) => {
   console.log(`    generating team ${i+1}/${amount}`)
   const team = generateTeam()
   team.reporters = generateReporters(faker.number.int({min:1, max:2}))
-  team.reports = generateReports(12 * 5)
+  team.reports = generateReports(12 * 10)
   return team
 })
 

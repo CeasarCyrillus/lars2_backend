@@ -16,7 +16,7 @@ export class ReportEntity {
 
   @AutoMap()
   @CreateDateColumn()
-  report_date: Date
+  report_date: string
 
   @AutoMap()
   @Column()
@@ -28,7 +28,7 @@ export class ReportEntity {
 
   @AutoMap()
   @Column()
-  period: Date
+  period: string
 
   @AutoMap(() => AdminEntity)
   @OneToOne(() => AdminEntity, {cascade: true, eager: true})

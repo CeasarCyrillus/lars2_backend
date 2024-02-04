@@ -37,6 +37,7 @@ export const reportRepository = AppDataSource.getRepository(ReportEntity).extend
     const data = await queryBuilder
         .skip(page.startRow)
         .take(page.endRow - page.startRow)
+        .orderBy(`${ReportEntity.name}.period`, "DESC")
         .getMany()
 
     return {
