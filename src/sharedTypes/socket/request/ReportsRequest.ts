@@ -1,5 +1,5 @@
-import {QueryRequest} from "./QueryRequest";
-import {ReportFilter} from "../../dto/ReportFilter";
+import {QueryModel} from "./QueryModel";
+import {ReportFilter} from "../../dto/filter/ReportFilter";
 import {BaseRequest} from "./Request";
 
-export type ReportsRequest = BaseRequest<QueryRequest<ReportFilter>>
+export type ReportsRequest = BaseRequest<QueryModel<ReportFilter>>

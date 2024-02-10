@@ -7,22 +7,24 @@ import {TeamsResponse} from "./response/TeamsResponse";
 import {ReportsRequest} from "./request/ReportsRequest";
 import {ValidateAuthenticationRequest} from "./request/ValidateAuthenticationRequest";
 import {LoginRequest} from "./request/LoginRequest";
+import {BaseRequest} from "./request/Request";
+import {AllTeamsRequest} from "./request/AllTeamsRequest";
 
 export type ServerToClientEvents = {
   user: (user: UserResponse) => void
   validateAuthentication: (isValid: ValidateAuthenticationResponse) => void
-  reports: (reports: ReportsResponse) => void
+  getReports: (reports: ReportsResponse) => void
   login: (authentication: LoginResponse) => void
-  teams: (teams: TeamsResponse) => void,
+  getAllTeams: (teams: TeamsResponse) => void,
   connect: () => void
 }
 
 export type ClientToServerEvents = {
   user: () => void
   validateAuthentication: (request: ValidateAuthenticationRequest) => void
-  reports: (request: ReportsRequest) => void
+  getReports: (request: ReportsRequest) => void
   login: (request: LoginRequest) => void
-  teams: () => void
+  getAllTeams: (request: AllTeamsRequest) => void
 }
 
 export type InterServerEvents = any

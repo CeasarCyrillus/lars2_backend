@@ -3,10 +3,12 @@ import {TeamEntity} from "../entity/TeamEntity";
 import {faker} from "@faker-js/faker";
 import {ReportEntity} from "../entity/ReportEntity";
 import {generateHash} from "../../lib/password";
-import {adminRepository, reportRepository, teamRepository} from "../entity/repository";
 import {ReportStatus} from "../../sharedTypes/dto/ReportStatus";
 import {AdminEntity} from "../entity/AdminEntity";
 import moment from "moment";
+import {ReportRepository} from "../repository/ReportRepository";
+import {TeamRepository} from "../repository/TeamRepository";
+import {AdminRepository} from "../repository/AdminRepository";
 
 faker.seed(1118112)
 const today = new Date("2024-03")
@@ -15,7 +17,7 @@ const yearsAgo = new Date("2015-01")
 const range = (amount: number) => [...new Array(amount)].map((_, index) => index)
 const generateTeam = () => {
   const team = new TeamEntity()
-  team.name = `${faker.color.human()} ${faker.company.buzzNoun()} IF`
+  team.name = `${faker.color.human()} ${faker.company.buzzNoun()} IF ${faker.number.int({min: 0, max: 500})}`
   return team
 }
 
@@ -25,6 +27,9 @@ const generateReport = () => {
   report.status = faker.helpers.arrayElement(statuses)
   report.report_date = moment(faker.date.between({from: yearsAgo, to: today})).format("YYYY-MM")
   report.period = moment(faker.date.between({from: yearsAgo, to: today})).format("YYYY-MM")
+  if(report.report_date > report.period){
+    report.status = "past-deadline"
+  }
   report.revision = faker.number.int({min: 0, max:4})
   report.reporter = generateReporter()
   return report
@@ -67,9 +72,9 @@ const generateTeams = (amount: number) => range(amount).map((i) => {
 })
 
   const clearDb = async () => {
-    await reportRepository.delete({})
-    await adminRepository.delete({})
-    await teamRepository.delete({})
+    await ReportRepository.delete({})
+    await AdminRepository.delete({})
+    await TeamRepository.delete({})
 }
 
 AppDataSource.initialize().then(async () => {
@@ -81,8 +86,8 @@ AppDataSource.initialize().then(async () => {
   const admin = generateAdmin()
   console.log("4. done")
   console.log("5. saving data")
-  await adminRepository.save(admin)
-  const saved = teams.map((team) => teamRepository.save(team))
+  await AdminRepository.save(admin)
+  const saved = teams.map((team) => TeamRepository.save(team))
   await Promise.all(saved)
   //await teamRepository.save(teams)
   console.log("6. done")

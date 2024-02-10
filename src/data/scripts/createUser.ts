@@ -1,7 +1,7 @@
 import {generateHash} from "../../lib/password";
 import {AppDataSource} from "../data-source";
 import {AdminEntity} from "../entity/AdminEntity";
-import {adminRepository} from "../entity/repository";
+import {AdminRepository} from "../repository/AdminRepository";
 
 const getNamedArg = (argName: string): string =>{
   const arg = process.argv
@@ -28,7 +28,7 @@ AppDataSource.initialize().then(async () => {
   user.phone = phone
   user.passwordHash = generateHash(password)
 
-  await adminRepository.save(user)
+  await AdminRepository.save(user)
   console.log("User created!")
   console.log(JSON.stringify(user, null, 4))
   process.exit()

@@ -3,11 +3,12 @@ import {createServer} from 'node:http';
 import {Server} from 'socket.io';
 import cors from "cors"
 import {encode} from "jwt-simple"
-import {isAuthorized, JwtPayload, jwtSecretKey, withAuthorization} from "./lib/jwt";
+import {isAuthorized, jwtSecretKey} from "./lib/jwt";
 import {withError, withSuccess} from "./lib/response";
 import {Authentication} from "./sharedTypes/dto/Authentication";
 import {
-  ClientToServerEvents, EventName,
+  ClientToServerEvents,
+  EventName,
   InterServerEvents,
   ServerToClientEvents,
   SocketData
@@ -16,17 +17,20 @@ import "reflect-metadata"
 import {AppDataSource} from "./data/data-source";
 import {verifyPassword} from "./lib/password";
 import {getConfig} from "./GetConfig";
-import {adminRepository, reportRepository, teamRepository} from "./data/entity/repository";
 import {createMap} from "@automapper/core";
 import {mapper} from "./sharedTypes/dto/mapper";
 import {AdminEntity} from "./data/entity/AdminEntity";
 import {AdminDTO} from "./sharedTypes/dto/AdminDTO";
 import {ReportEntity} from "./data/entity/ReportEntity";
-import {mapReport, ReportDTO} from "./sharedTypes/dto/ReportDTO";
+import {ReportDTO} from "./sharedTypes/dto/ReportDTO";
 import {TeamEntity} from "./data/entity/TeamEntity";
 import {mapTeam, TeamDTO} from "./sharedTypes/dto/TeamDTO";
-import {ReportsRequest} from "./sharedTypes/socket/request/ReportsRequest";
-import {QueryRequest} from "./sharedTypes/socket/request/QueryRequest";
+import {getReports} from "./handlers/getReports";
+import {getAllTeams} from "./handlers/getAllTeams";
+import {TeamRepository} from "./data/repository/TeamRepository";
+import {AdminRepository} from "./data/repository/AdminRepository";
+import {login} from "./handlers/login";
+import {validateAuthentication} from "./handlers/validateAuthentication";
 
 const app = express();
 app.use(express.json())
@@ -43,72 +47,16 @@ const io = new Server<
     origin: "http://localhost:3000"
   }});
 
-const userEvent: EventName = "user"
-const validateAuthenticationEvent: EventName = "validateAuthentication"
-const reportsEvent: EventName = "reports"
-const loginEvent: EventName = "login"
-const teamsEvent: EventName = "teams"
-
-
 createMap(mapper, AdminEntity, AdminDTO)
 createMap(mapper, TeamEntity, TeamDTO)
 createMap(mapper, ReportEntity, ReportDTO)
 
 
 io.on("connection", (socket) => {
-  console.log("CC: connection!")
-  const success = withSuccess(socket)
-  const failure = withError(socket)
-  const authorized = withAuthorization(socket)
-
-  authorized(userEvent, ({user}) => user)
-
-  authorized<QueryRequest<ReportDTO>>(reportsEvent, async ({request}) => {
-    const queryResponse = await reportRepository.filter(request.payload)
-    return {
-      count: queryResponse.count,
-      data: queryResponse.data.map(mapReport)
-    }
-  })
-
-  authorized(teamsEvent, async () => {
-    const teams = await teamRepository.find({})
-    return teams.map(mapTeam)
-  })
-
-  socket.on(loginEvent, async (request) => {
-    const {payload: loginDetails} = request
-    const user = await adminRepository.findOne({
-      where: [
-        {username: loginDetails.username},
-        {email: loginDetails.username}
-      ]
-    })
-
-    if(!user) {
-      failure(loginEvent, "incorrectUsername", request.trace)
-      return
-    }
-
-    if(!verifyPassword(loginDetails.password, user.passwordHash)){
-      failure(loginEvent, "incorrectPassword", request.trace)
-      return
-    }
-
-    const token = encode(user, jwtSecretKey)
-    const authHeader: Authentication = {token}
-    socket.data.auth = authHeader
-    success(loginEvent, authHeader, request.trace)
-  })
-
-  socket.on(validateAuthenticationEvent, (request) => {
-    const {payload: authHeader} = request
-    const authorized = isAuthorized(authHeader);
-    if(authorized) {
-      socket.data.auth = authHeader
-    }
-    success(validateAuthenticationEvent, authorized, request.trace)
-  })
+  socket.on("getReports", getReports(socket))
+  socket.on("getAllTeams", getAllTeams(socket))
+  socket.on("login", login(socket))
+  socket.on("validateAuthentication", validateAuthentication(socket))
 })
 
 
@@ -120,5 +68,3 @@ AppDataSource.initialize().then(() => {
     console.log(`server running at http://localhost:${port}`);
   });
 })
-
-

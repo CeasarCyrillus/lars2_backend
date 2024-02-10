@@ -1,7 +1,7 @@
 import {Filter} from "../../dto/Filter";
 import {Page} from "../../dto/Page";
 
-export type QueryRequest<TFilter> = {
+export type QueryModel<TFilter> = {
   filter: Filter<TFilter>
   page: Page
 }

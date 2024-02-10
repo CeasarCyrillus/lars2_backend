@@ -10,7 +10,6 @@ export type SetFilter = {
 }
 
 export const isTextFilter = (candidate: FilterModel): candidate is TextFilter => candidate.filterType === "text"
-export const isSetFilter = (candidate: FilterModel): candidate is SetFilter => candidate.filterType === "set"
 export type FilterModel = TextFilter | SetFilter
 
 export type Filter<T> = Partial<Record<keyof T, FilterModel>>
