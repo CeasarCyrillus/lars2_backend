@@ -7,13 +7,15 @@ import {TeamsResponse} from "./response/TeamsResponse";
 import {ReportsRequest} from "./request/ReportsRequest";
 import {ValidateAuthenticationRequest} from "./request/ValidateAuthenticationRequest";
 import {LoginRequest} from "./request/LoginRequest";
-import {BaseRequest} from "./request/Request";
 import {AllTeamsRequest} from "./request/AllTeamsRequest";
+import {ReportDetailsRequest} from "./request/ReportDetailsRequest";
+import {ReportDetailsResponse} from "./response/ReportDetailsResponse";
 
 export type ServerToClientEvents = {
   user: (user: UserResponse) => void
   validateAuthentication: (isValid: ValidateAuthenticationResponse) => void
   getReports: (reports: ReportsResponse) => void
+  getReportDetails: (reportDetails: ReportDetailsResponse) => void
   login: (authentication: LoginResponse) => void
   getAllTeams: (teams: TeamsResponse) => void,
   connect: () => void
@@ -23,6 +25,7 @@ export type ClientToServerEvents = {
   user: () => void
   validateAuthentication: (request: ValidateAuthenticationRequest) => void
   getReports: (request: ReportsRequest) => void
+  getReportDetails: (request: ReportDetailsRequest) => void
   login: (request: LoginRequest) => void
   getAllTeams: (request: AllTeamsRequest) => void
 }

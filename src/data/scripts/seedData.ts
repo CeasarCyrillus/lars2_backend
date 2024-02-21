@@ -32,6 +32,7 @@ const generateReport = () => {
   }
   report.revision = faker.number.int({min: 0, max:4})
   report.reporter = generateReporter()
+  report.note = faker.helpers.arrayElement([faker.lorem.text(), undefined, undefined])
   return report
 }
 

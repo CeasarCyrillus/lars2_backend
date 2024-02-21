@@ -27,10 +27,10 @@ import {TeamEntity} from "./data/entity/TeamEntity";
 import {mapTeam, TeamDTO} from "./sharedTypes/dto/TeamDTO";
 import {getReports} from "./handlers/getReports";
 import {getAllTeams} from "./handlers/getAllTeams";
-import {TeamRepository} from "./data/repository/TeamRepository";
-import {AdminRepository} from "./data/repository/AdminRepository";
 import {login} from "./handlers/login";
 import {validateAuthentication} from "./handlers/validateAuthentication";
+import {ReportDetailsDTO} from "./sharedTypes/dto/ReportDetailsDTO";
+import {getReportDetails} from "./handlers/getReportDetails";
 
 const app = express();
 app.use(express.json())
@@ -50,10 +50,12 @@ const io = new Server<
 createMap(mapper, AdminEntity, AdminDTO)
 createMap(mapper, TeamEntity, TeamDTO)
 createMap(mapper, ReportEntity, ReportDTO)
+createMap(mapper, ReportEntity, ReportDetailsDTO)
 
 
 io.on("connection", (socket) => {
   socket.on("getReports", getReports(socket))
+  socket.on("getReportDetails", getReportDetails(socket))
   socket.on("getAllTeams", getAllTeams(socket))
   socket.on("login", login(socket))
   socket.on("validateAuthentication", validateAuthentication(socket))

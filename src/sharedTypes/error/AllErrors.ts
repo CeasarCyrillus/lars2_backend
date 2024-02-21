@@ -4,6 +4,7 @@ import {UserError} from "./UserError";
 import {TeamsError} from "./TeamsError";
 import {ReportsError} from "./ReportsError";
 import {UnknownError} from "./UnknownError";
+import {ReportDetailsError} from "./ReportDetailsError";
 
 export type AllErrors =
   AuthenticationError |
@@ -11,4 +12,5 @@ export type AllErrors =
   UserError |
   TeamsError |
   ReportsError |
-  UnknownError
+  UnknownError |
+  ReportDetailsError

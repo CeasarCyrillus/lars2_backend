@@ -34,4 +34,8 @@ export class ReportEntity {
   @OneToOne(() => AdminEntity, {cascade: true, eager: true})
   @JoinColumn()
   reporter: AdminEntity
+
+  @AutoMap()
+  @Column({nullable: true})
+  note?: string
 }

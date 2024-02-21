@@ -14,7 +14,7 @@ export class ReportDTO {
   team: TeamDTO
 
   @AutoMap()
-  report_date: Date
+  report_date: string
 
   @AutoMap()
   revision: number
@@ -23,7 +23,7 @@ export class ReportDTO {
   status: ReportStatus
 
   @AutoMap()
-  period: Date
+  period: string
 
   @AutoMap(() => AdminDTO)
   reporter: AdminDTO
