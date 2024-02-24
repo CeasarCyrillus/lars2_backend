@@ -58,7 +58,7 @@ const generateReporter = () => {
   reporter.username = faker.internet.userName({firstName, lastName})
   reporter.email = faker.internet.email({firstName, lastName})
   reporter.phone = faker.phone.number()
-  reporter.role = "reporter"
+  reporter.role = faker.helpers.arrayElement(["reporter", "admin"])
   return reporter
 }
 

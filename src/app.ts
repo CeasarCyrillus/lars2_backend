@@ -15,22 +15,22 @@ import {
 } from "./sharedTypes/socket/Socket";
 import "reflect-metadata"
 import {AppDataSource} from "./data/data-source";
-import {verifyPassword} from "./lib/password";
 import {getConfig} from "./GetConfig";
 import {createMap} from "@automapper/core";
 import {mapper} from "./sharedTypes/dto/mapper";
 import {AdminEntity} from "./data/entity/AdminEntity";
-import {AdminDTO} from "./sharedTypes/dto/AdminDTO";
 import {ReportEntity} from "./data/entity/ReportEntity";
 import {ReportDTO} from "./sharedTypes/dto/ReportDTO";
 import {TeamEntity} from "./data/entity/TeamEntity";
-import {mapTeam, TeamDTO} from "./sharedTypes/dto/TeamDTO";
+import {TeamDTO} from "./sharedTypes/dto/TeamDTO";
 import {getReports} from "./handlers/getReports";
 import {getAllTeams} from "./handlers/getAllTeams";
 import {login} from "./handlers/login";
 import {validateAuthentication} from "./handlers/validateAuthentication";
 import {ReportDetailsDTO} from "./sharedTypes/dto/ReportDetailsDTO";
 import {getReportDetails} from "./handlers/getReportDetails";
+import {getUser} from "./handlers/getUser";
+import {AdminDTO} from "./sharedTypes/dto/AdminDTO";
 
 const app = express();
 app.use(express.json())
@@ -57,6 +57,8 @@ io.on("connection", (socket) => {
   socket.on("getReports", getReports(socket))
   socket.on("getReportDetails", getReportDetails(socket))
   socket.on("getAllTeams", getAllTeams(socket))
+  socket.on("getUser", getUser(socket))
+
   socket.on("login", login(socket))
   socket.on("validateAuthentication", validateAuthentication(socket))
 })

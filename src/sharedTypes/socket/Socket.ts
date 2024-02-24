@@ -10,9 +10,10 @@ import {LoginRequest} from "./request/LoginRequest";
 import {AllTeamsRequest} from "./request/AllTeamsRequest";
 import {ReportDetailsRequest} from "./request/ReportDetailsRequest";
 import {ReportDetailsResponse} from "./response/ReportDetailsResponse";
+import {UserRequest} from "./request/UserRequest";
 
 export type ServerToClientEvents = {
-  user: (user: UserResponse) => void
+  getUser: (user: UserResponse) => void
   validateAuthentication: (isValid: ValidateAuthenticationResponse) => void
   getReports: (reports: ReportsResponse) => void
   getReportDetails: (reportDetails: ReportDetailsResponse) => void
@@ -22,7 +23,7 @@ export type ServerToClientEvents = {
 }
 
 export type ClientToServerEvents = {
-  user: () => void
+  getUser: (request: UserRequest) => void
   validateAuthentication: (request: ValidateAuthenticationRequest) => void
   getReports: (request: ReportsRequest) => void
   getReportDetails: (request: ReportDetailsRequest) => void
