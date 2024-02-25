@@ -44,7 +44,7 @@ const generateAdmin = () => {
   admin.name = `${firstName} ${lastName}`
   admin.username = "admin"
   admin.email = "admin"
-  admin.phone = faker.phone.number()
+  admin.phone = faker.helpers.fromRegExp(/[1-9][0-9]{10,12}/)
   admin.role = "admin"
   return admin
 }
@@ -57,8 +57,8 @@ const generateReporter = () => {
   reporter.name = `${firstName} ${lastName}`
   reporter.username = faker.internet.userName({firstName, lastName})
   reporter.email = faker.internet.email({firstName, lastName})
-  reporter.phone = faker.phone.number()
-  reporter.role = faker.helpers.arrayElement(["reporter", "admin"])
+  reporter.phone = faker.helpers.fromRegExp(/[1-9][0-9]{10,12}/)
+  reporter.role = faker.helpers.arrayElement(["volunteer", "admin"])
   return reporter
 }
 
@@ -83,7 +83,7 @@ AppDataSource.initialize().then(async () => {
   await clearDb()
   console.log("2. done")
   console.log("3. generating data")
-  const teams = generateTeams(500)
+  const teams = generateTeams(10)
   const admin = generateAdmin()
   console.log("4. done")
   console.log("5. saving data")

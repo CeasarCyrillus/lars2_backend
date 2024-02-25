@@ -7,7 +7,7 @@ export const validateAuthentication = (socket: Socket) => (request: ValidateAuth
   const success = withSuccess(socket)
   const failure = withError(socket)
   const {payload: authHeader} = request
-  const authorized = isAuthorized(authHeader, ["admin", "reporter"]);
+  const authorized = isAuthorized(authHeader, ["admin", "volunteer"]);
   if(authorized) {
     socket.data.auth = authHeader
     success("validateAuthentication", authorized, request.trace)
