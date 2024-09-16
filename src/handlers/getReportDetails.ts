@@ -16,7 +16,7 @@ export const getReportDetails = (socket: Socket) => async (request: ReportDetail
   const report = await ReportRepository.findOne({
     where: {id: request.payload.id},
     relations: {
-      team: {reporters: true},
+      team: {volunteers: true},
       reporter: true
     }
   })

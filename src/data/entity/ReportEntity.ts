@@ -1,18 +1,24 @@
-import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn
+} from "typeorm";
 import {TeamEntity} from "./TeamEntity";
 import {ReportStatus} from "../../sharedTypes/dto/ReportStatus";
 import {AutoMap} from "@automapper/classes";
 import {AdminEntity} from "./AdminEntity";
+import {EventEntity} from "./EventEntity";
 
 @Entity("Report")
 export class ReportEntity {
   @AutoMap()
   @PrimaryGeneratedColumn()
   id: number
-
-  @AutoMap(() => TeamEntity)
-  @ManyToOne(() => TeamEntity, (team) => team.reports)
-  team: TeamEntity
 
   @AutoMap()
   @CreateDateColumn()
@@ -24,18 +30,18 @@ export class ReportEntity {
 
   @AutoMap()
   @Column()
-  status: ReportStatus
-
-  @AutoMap()
-  @Column()
   period: string
-
-  @AutoMap(() => AdminEntity)
-  @OneToOne(() => AdminEntity, {cascade: true, eager: true})
-  @JoinColumn()
-  reporter: AdminEntity
 
   @AutoMap()
   @Column({nullable: true})
   note?: string
+
+  @AutoMap(() => TeamEntity)
+  @ManyToOne(() => TeamEntity, (team) => team.reports)
+  team: TeamEntity
+
+  @AutoMap(() => EventEntity)
+  @OneToMany(() => EventEntity, (event) => event.report)
+  @JoinColumn()
+  events: EventEntity[];
 }

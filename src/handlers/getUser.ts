@@ -3,8 +3,8 @@ import {withError, withSuccess} from "../lib/response";
 import {isAuthorized} from "../lib/jwt";
 
 import {ReportDetailsRequest} from "../sharedTypes/socket/request/ReportDetailsRequest";
-import {AdminUserRepository} from "../data/repository/AdminUserRepository";
 import {mapAdminUser} from "../sharedTypes/dto/AdminDTO";
+import {AdminRepository} from "../data/repository/AdminRepository";
 
 export const getUser = (socket: Socket) => async (request: ReportDetailsRequest) => {
   const success = withSuccess(socket)
@@ -14,7 +14,7 @@ export const getUser = (socket: Socket) => async (request: ReportDetailsRequest)
   }
 
 
-  const user = await AdminUserRepository.findOne({
+  const user = await AdminRepository.findOne({
     where: {id: request.payload.id}
   })
 

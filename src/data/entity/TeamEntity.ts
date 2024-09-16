@@ -1,13 +1,14 @@
 import {
   Column,
-  Entity,
+  Entity, JoinColumn,
   JoinTable,
-  ManyToMany, OneToMany,
+  ManyToMany, OneToMany, OneToOne,
   PrimaryGeneratedColumn
 } from "typeorm";
 import {ReportEntity} from "./ReportEntity";
 import {AdminEntity} from "./AdminEntity";
 import {AutoMap} from "@automapper/classes";
+import {PlaceEntity} from "./PlaceEntity";
 
 @Entity("Team")
 export class TeamEntity {
@@ -20,10 +21,16 @@ export class TeamEntity {
   name: string
 
   @AutoMap(() => [AdminEntity])
-  @ManyToMany(() => AdminEntity,{cascade: true, eager: true})
+  @ManyToMany(() => AdminEntity)
   @JoinTable()
-  reporters: AdminEntity[]
+  volunteers: AdminEntity[]
 
-  @OneToMany(() => ReportEntity, (report) => report.team, {cascade: true})
+  @OneToMany(() => ReportEntity, (report) => report.team)
+  @JoinColumn()
   reports: ReportEntity[]
+
+  @AutoMap(() => PlaceEntity)
+  @OneToMany(() => PlaceEntity, place => place.team)
+  @JoinColumn()
+  places: PlaceEntity[]
 }

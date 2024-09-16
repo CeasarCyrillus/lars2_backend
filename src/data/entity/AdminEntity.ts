@@ -1,6 +1,7 @@
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {UserRole} from "../../sharedTypes/dto/UserRole";
 import {AutoMap} from "@automapper/classes";
+import {EventEntity} from "./EventEntity";
 
 @Entity("Admin")
 export class AdminEntity {
@@ -34,4 +35,8 @@ export class AdminEntity {
   @AutoMap()
   @Column()
   role: UserRole
+
+  @AutoMap()
+  @OneToMany(() => EventEntity, (event) => event.reporter)
+  events: EventEntity[]
 }
