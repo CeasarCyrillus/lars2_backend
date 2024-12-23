@@ -44,4 +44,13 @@ export class ReportEntity {
   @OneToMany(() => EventEntity, (event) => event.report)
   @JoinColumn()
   events: EventEntity[];
+
+  @AutoMap()
+  @Column({nullable: false, default: "not-started"})
+  status: ReportStatus
+
+  @AutoMap(() => AdminEntity)
+  @ManyToOne(() => AdminEntity, {nullable: false})
+  @JoinColumn()
+  reporter: AdminEntity
 }

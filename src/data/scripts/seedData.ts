@@ -39,6 +39,7 @@ const generateReport = () => {
   report.period = moment(faker.date.between({from: yearsAgo, to: today})).format("YYYY-MM")
   report.revision = faker.number.int({min: 0, max:4})
   report.note = faker.helpers.arrayElement([faker.lorem.text(), undefined, undefined])
+  report.status = faker.helpers.arrayElement(["approved", "in-progress", "past-deadline", "not-started"])
   return report
 }
 
@@ -103,55 +104,55 @@ const generateEvent = () => {
 const generateVolunteers = (amount: number) => range(amount).map(generateVolunteer)
 
 AppDataSource.initialize().then(async (db) => {
+  console.log("1. clearing database...")
   await db.dropDatabase()
   await db.destroy()
+  console.log("2. done")
   AppDataSource.initialize().then(async () => {
-    console.log("1. clearing database...")
-    console.log("2. done")
     console.log("3. generating data")
-    const team = generateTeam()
-    const places = generatePlaces(faker.number.int({min: 3, max: 12}))
-    const volunteers = generateVolunteers(faker.number.int({min: 1, max: 5}))
-    const events = generateEvents(faker.number.int({min: 52, max: 250}))
+    const teams = range(50).map(generateTeam)
+    for (let i = 0; i < teams.length; i++){
+      console.log(`   Done ${i +1} / ${teams.length}`)
+      const team = teams[i];
+      const places = generatePlaces(faker.number.int({min: 1, max: 12}))
+      const volunteers = generateVolunteers(faker.number.int({min: 2, max: 5}))
+      const events = generateEvents(faker.number.int({min: 52, max: 250}))
 
-    console.log("Saving Places")
-    await PlaceRepository.save(places)
-    console.log("Saving Volunteers")
-    await AdminRepository.save(volunteers)
+      await PlaceRepository.save(places)
+      await AdminRepository.save(volunteers)
 
-    for (const event of events) {
-      event.reporter = faker.helpers.arrayElement(volunteers)
-      event.place = faker.helpers.arrayElement(places)
+      for (const event of events) {
+        event.reporter = faker.helpers.arrayElement(volunteers)
+        event.place = faker.helpers.arrayElement(places)
+      }
+
+      await EventRepository.save(events)
+      const reports = generateReports(30)
+      do {
+        for (const report of reports) {
+          const eventsForReport = range(faker.number.int({min: 1, max: 4}))
+            .map(() => events.pop())
+            .filter(isEvent)
+
+          report.events = [...eventsForReport, ...(report.events ?? [])]
+          report.reporter = faker.helpers.arrayElement(volunteers)
+        }
+      } while (events.length > 0)
+
+      await ReportRepository.save(reports)
+
+      team.volunteers = volunteers
+      team.places = places
+      team.reports = reports
     }
 
-    console.log("Saving Events")
-    await EventRepository.save(events)
-    const reports = generateReports(12)
-    do {
-      for (const report of reports) {
-        const eventsForReport = range(faker.number.int({min: 1, max: 4}))
-          .map(() => events.pop())
-          .filter(isEvent)
+    console.log("Saving admin")
+    const admin = generateAdmin()
+    await AdminRepository.save(admin);
 
-        report.events = [...eventsForReport, ...(report.events ?? [])]
-      }
-    } while (events.length > 0)
-
-    console.log("Saving Reports")
-    await ReportRepository.save(reports)
-
-    team.volunteers = volunteers
-    team.places = places
-    team.reports = reports
-
-    console.log("Saving Team")
-    await TeamRepository.save(team)
+    console.log("Saving Teams")
+    await TeamRepository.save(teams)
     console.log("4. done")
-
-
-    //const teams = [team]
-    //await Promise.all(teams.map((team) => TeamRepository.save(team)))
-    console.log("6. done")
 
     process.exit()
   })

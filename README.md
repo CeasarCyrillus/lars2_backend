@@ -1,7 +1,12 @@
-# Awesome Project Build with TypeORM
+## L.A.R.S
 
-Steps to run this project:
+### Local Development
+**Prerequisites:**
+- Postgresql installed and running
+- yarn installed
 
-1. Run `npm i` command
-2. Setup database settings inside `data-source.ts` file
-3. Run `npm start` command
+1. Install packages `yarn install`
+2. Make a copy of `config.production.json` and name it `config.development.json`
+3. Replace config values with your db login
+4. Run `yarn seedData` to seed the db with fake values
+5. Run `yarn start` to run the backend locally

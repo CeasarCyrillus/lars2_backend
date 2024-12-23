@@ -27,6 +27,7 @@ AppDataSource.initialize().then(async () => {
   user.name = name
   user.phone = phone
   user.passwordHash = generateHash(password)
+  user.role = "admin"
 
   await AdminRepository.save(user)
   console.log("User created!")

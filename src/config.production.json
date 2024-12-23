@@ -3,10 +3,10 @@
     "host": "localhost",
     "port": 5432,
     "username": "postgres",
-    "password": "rasaeC1598!",
+    "password": "password123!",
     "database": "postgres",
-    "logging": true,
+    "logging": false,
     "synchronize": true
   },
-  "passwordSaltRounds": 10
+  "passwordSaltRounds": 12
 }

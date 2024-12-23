@@ -11,7 +11,7 @@ export class TeamDTO {
   name: string
 
   @AutoMap(() => [AdminDTO])
-  reporters: AdminDTO[]
+  volunteers: AdminDTO[]
 }
 
 export const mapTeam = (teamEntity: TeamEntity): TeamDTO => mapper.map(teamEntity, TeamEntity, TeamDTO)
